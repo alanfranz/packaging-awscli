@@ -2,6 +2,9 @@
 # enter the directory where the build script is located
 cd "${0%/*}"
 
+TESTONLY=false
+[ "$1" == "--testonly" ] && { TESTONLY=true ;}
+
 # some useful variables
 SRC_DIR="$(pwd)/../../aws-cli/"
 CURRENT_DISTRO=$(basename $(pwd))
@@ -11,13 +14,13 @@ TEST_IMAGE="aws-cli-${CURRENT_DISTRO}-test"
 BUILD_NUMBER=${BUILD_NUMBER:-0}
 GIT_COMMIT=${GIT_COMMIT:-gitcommitstub}
 
-docker build --pull -t ${BUILD_IMAGE} build-image
+${TESTONLY} || docker build --pull -t ${BUILD_IMAGE} build-image
 
-rm -rf out
+${TESTONLY} || rm -rf out
 
 export VERSION=$(cd ${SRC_DIR} ; { python setup.py --version | tr -d '\n' ; })
 [ -n "${VERSION}" ]
-docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "GIT_COMMIT=${GIT_COMMIT}" --env "VERSION=${VERSION}" --env-file ../env.list --rm -v $(pwd)/build-inside:/build-inside:ro -v ${SRC_DIR}:/source:ro -v $(pwd)/out:/out -w /build-inside ${BUILD_IMAGE} /build-inside/build-package
+${TESTONLY} || docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "GIT_COMMIT=${GIT_COMMIT}" --env "VERSION=${VERSION}" --env-file ../env.list --rm -v $(pwd)/build-inside:/build-inside:ro -v ${SRC_DIR}:/source:ro -v $(pwd)/out:/out -w /build-inside ${BUILD_IMAGE} /build-inside/build-package
 
 docker build --pull -t ${TEST_IMAGE} test-image
 

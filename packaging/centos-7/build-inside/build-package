@@ -3,6 +3,7 @@ trap 'chown -R --reference /build-inside/build-package /out/' EXIT
 
 virtualenv ${INSTALL_DIR} 
 ${INSTALL_DIR}/bin/pip install --upgrade setuptools
+${INSTALL_DIR}/bin/pip install --upgrade pip
 ${INSTALL_DIR}/bin/pip install -r /source/requirements.txt
 ${INSTALL_DIR}/bin/pip install /source
 # we explicitly add tests, since they're not part of the package
