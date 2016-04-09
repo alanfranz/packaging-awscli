@@ -11,4 +11,4 @@ cd /usr/bin
 ln -s ${INSTALL_DIR}/bin/aws aws
 
 cd /out
-fpm -t deb -s dir -n aws-cli --version ${VERSION} --iteration ${BUILD_NUMBER} --description "aws-cli ${GIT_COMMIT}" --depends python -C / ${INSTALL_DIR} /usr/bin/aws
+fpm -t deb -s dir -n aws-cli --version ${VERSION} --iteration ${BUILD_NUMBER} --description "aws-cli ${GIT_COMMIT}" --depends python --depends groff-base -C / ${INSTALL_DIR} /usr/bin/aws
