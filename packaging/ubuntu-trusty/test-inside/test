@@ -8,4 +8,4 @@ apt-get -f -y install
 cd ${INSTALL_DIR}
 cd tests
 export PYTHONIOENCODING="utf8"
- ../bin/nosetests -v unit/
+ ../bin/nosetests -v unit/ functional/
