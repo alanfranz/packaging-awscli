@@ -1,0 +1,15 @@
+#!/bin/bash -ex
+trap 'chown -R --reference /build-inside/build-package /out/' EXIT
+
+virtualenv ${INSTALL_DIR} 
+${INSTALL_DIR}/bin/pip install --upgrade setuptools
+${INSTALL_DIR}/bin/pip install -r /source/requirements.txt
+${INSTALL_DIR}/bin/pip install /source
+# we explicitly add tests, since they're not part of the package
+cp -pr /source/tests ${INSTALL_DIR}
+
+cd /usr/bin
+ln -s ${INSTALL_DIR}/bin/aws aws
+
+cd /out
+fpm -t rpm -s dir -n aws-cli --version ${VERSION} --iteration ${BUILD_NUMBER} --description "aws-cli ${GIT_COMMIT}" --depends python -C / ${INSTALL_DIR} /usr/bin/aws
