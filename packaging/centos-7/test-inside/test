@@ -1,11 +1,8 @@
 #!/bin/bash -ex
 trap 'chown -R --reference /test-inside/test /test-logs/' EXIT
  
-#we must do this in order to install a deb and missing deps afaik
-dpkg -i /out/*.deb || /bin/true
-apt-get -f -y install
+yum install -y  /out/*.rpm 
 
-cd ${INSTALL_DIR}
-cd tests
-export PYTHONIOENCODING="utf8"
- ../bin/nosetests -v unit/
+cd ${INSTALL_DIR}/tests
+
+../bin/nosetests -v unit/ 

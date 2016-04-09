@@ -19,8 +19,6 @@ export VERSION=$(cd ${SRC_DIR} ; { python setup.py --version | tr -d '\n' ; })
 [ -n "${VERSION}" ]
 docker run --env "BUILD_NUMBER=${BUILD_NUMBER}" --env "GIT_COMMIT=${GIT_COMMIT}" --env "VERSION=${VERSION}" --env-file ../env.list --rm -v $(pwd)/build-inside:/build-inside:ro -v ${SRC_DIR}:/source:ro -v $(pwd)/out:/out -w /build-inside ${BUILD_IMAGE} /build-inside/build-package
 
-exit 1
-
 docker build --pull -t ${TEST_IMAGE} test-image
 
 rm -rf test-logs
